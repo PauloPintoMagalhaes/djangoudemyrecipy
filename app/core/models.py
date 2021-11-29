@@ -6,9 +6,20 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """creates a new user according to model"""
-        user = self.model(email=email, **extra_fields)
+        if not email:
+            raise ValueError('Users must have a valid email!')
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password) # very important that password is encrypted and not set in mere text
         user.save(using=self._db) # Required for support across multiple db's. not required. but a good practice 
+
+        return user
+
+    def create_superuser(self, email, password):
+        """Creates and saves a new superuser"""
+        user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
 
         return user
 
@@ -22,3 +33,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
