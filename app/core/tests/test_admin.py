@@ -12,7 +12,7 @@ class AdminSiteTests(TestCase):
         )
         self.client.force_login(self.admin_user)
         self.user = get_user_model().objects.create_user(
-            email='test@this.com', 
+            email='test@this.com',
             password="pass123",
             name="Thisusername"
         )
@@ -22,7 +22,6 @@ class AdminSiteTests(TestCase):
         # reverse is used to pass urls paths without much hassle
         url = reverse("admin:core_user_changelist")
         res = self.client.get(url)
-        
         # assertContains tests that response contains a certain item
         # but also checks that the http response is 200
         self.assertContains(res, self.user.name)
