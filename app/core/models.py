@@ -1,6 +1,7 @@
-#models
+# models
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, \
+    BaseUserManager, PermissionsMixin
 
 
 class UserManager(BaseUserManager):
@@ -9,8 +10,11 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('Users must have a valid email!')
         user = self.model(email=self.normalize_email(email), **extra_fields)
-        user.set_password(password) # very important that password is encrypted and not set in mere text
-        user.save(using=self._db) # Required for support across multiple db's. not required. but a good practice 
+        # very important that password is encrypted and not set in mere text
+        user.set_password(password)
+        # Required for support across multiple db's.
+        # not required. but a good practice
+        user.save(using=self._db)
 
         return user
 
@@ -23,6 +27,7 @@ class UserManager(BaseUserManager):
 
         return user
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports email instead of username"""
     email = models.EmailField(max_length=255, unique=True)
@@ -33,4 +38,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-
