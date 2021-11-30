@@ -6,24 +6,25 @@ from core import models
 
 
 class UserAdmin(BaseUserAdmin):
+    # google search "django modeladmin fieldsets" for more info
+    # this is simpler that it looks
     ordering = ['id']
     list_display = ['email', 'name']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal Info'), {'fields': ('name',)}),
         (
-            _('Permissions'), 
+            _('Permissions'),
             {'fields': ('is_active', 'is_staff', 'is_superuser')}
-        ), 
+        ),
         (_('Important Dates'), {'fields': ('last_login',)})
     )
     add_fieldsets = (
         (None, {
-            'classes': ('wide',), 
+            'classes': ('wide',),
             'fields': ('email', 'password1', 'password2')
         }),
     )
-
 
 
 admin.site.register(models.User, UserAdmin)

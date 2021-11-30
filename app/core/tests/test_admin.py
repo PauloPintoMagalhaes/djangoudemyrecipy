@@ -1,5 +1,3 @@
-from django.conf import urls
-from django.db.models.fields import reverse_related
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
