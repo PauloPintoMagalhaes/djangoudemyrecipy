@@ -9,12 +9,23 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('email', 'password', 'name')
-        # used to veryfy if the pass is > 5 chars and that it's write only
+        # used to verify if the pass is > 5 chars and that it's write only
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):
         """create a new user with encrtypted pass and returns the user"""
         return get_user_model().objects.create_user(**validated_data)
+
+    def update(self, validated_data):
+        """update a user, setting the password correctly and return it"""
+        password = validated_data.pop('password', None)
+        user = super().update(instance, validated_data)
+
+        if password:
+            user.set_password(password) 
+            user.save()
+        
+        return user
 
 
 class AuthTokenSerializer(serializers.Serializer):
